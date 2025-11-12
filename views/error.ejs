@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+
+<div class="flex items-center justify-center min-h-screen bg-muted/50">
+  <div class="text-center">
+    <div class="mb-8">
+      <i data-lucide="alert-circle" class="w-24 h-24 text-muted-foreground mx-auto"></i>
+    </div>
+    <h1 class="text-4xl font-bold text-foreground mb-4"><%= title %></h1>
+    <p class="text-lg text-muted-foreground mb-8"><%= message %></p>
+    <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+      <i data-lucide="home" class="w-4 h-4"></i>
+      Back to Dashboard
+    </a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .main-container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      background: #f7fafc;
+    }
+
+    .content-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      background: white;
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    header svg {
+      width: 32px;
+      height: 32px;
+      color: #667eea;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      border-left: 4px solid #667eea;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .section {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a67d8;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .refresh-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .error-banner {
+      background: #fed7d7;
+      border: 1px solid #fc8181;
+      color: #c53030;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f7fafc;
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      color: #2d3748;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .zone-details {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .zone-details h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 24px;
+    }
+
+    .zone-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .info-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .info-item label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .info-item-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a202c;
+      word-break: break-all;
+    }
+
+    .records-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .records-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a202c;
+      margin: 0;
+    }
+
+    .record-type-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #e0e7ff;
+      color: #667eea;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: #667eea;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-button:hover {
+      color: #5a67d8;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      font-size: 16px;
+      color: #718096;
+    }
+
+    .loading::after {
+      content: '';
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #718096;
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      opacity: 0.3;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #a0aec0;
+      transition: color 0.2s;
+    }
+
+    .close-btn:hover {
+      color: #2d3748;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: #2d3748;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .modal-actions button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    input[type="search"] {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="search"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    [data-lucide] {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <%- include('./partials/sidebar.ejs', { currentPage: 'zones' }) %>
+
+  <!-- Main Content -->
+  <div class="content">
+    <header>
+      <svg data-lucide="globe"></svg>
+      <h1>DNS Zones</h1>
+      <button class="btn btn-primary refresh-btn" onclick="loadZones()">
+        <svg data-lucide="refresh-cw" style="width: 16px; height: 16px;"></svg>
+        Refresh
+      </button>
+    </header>
+    
+    <div class="content-wrapper">
+      <!-- Error Banner -->
+      <div id="error-banner" class="error-banner" style="display: none;">
+        <div>
+          <strong>Error:</strong> <span id="error-message"></span>
+        </div>
+        <button class="btn btn-secondary" onclick="document.getElementById('error-banner').style.display='none'">Close</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Zones</h3>
+          <div class="value" id="stat-zones">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Records</h3>
+          <div class="value" id="stat-records">0</div>
+        </div>
+      </div>
+
+      <!-- Zones List View -->
+      <div id="zones-list-view">
+        <!-- Forward Zones -->
+        <div class="table-container" style="margin-bottom: 32px;">
+          <div class="table-header">
+            <h3 style="margin: 0; font-size: 16px; color: #1a202c;">DNS Zones (Forward)</h3>
+            <button class="btn btn-primary" onclick="showCreateZoneModal()">
+              <svg data-lucide="plus" style="width: 16px; height: 16px;"></svg>
+              Add Zone
+            </button>
+          </div>
+          
+          <div id="forward-zones-loading" class="loading">Loading zones...</div>
+          <div id="forward-zones-empty" class="empty-state" style="display: none;">
+            <svg data-lucide="inbox"></svg>
+            <p>No forward zones found</p>
+          </div>
+          
+          <table id="forward-zones-table" style="display: none;">
+            <thead>
+              <tr>
+                <th>Zone Name</th>
+                <th>Type</th>
+                <th>Serial</th>
+                <th>Records</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="forward-zones-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Reverse DNS Zones -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 style="margin: 0; font-size: 16px; color: #1a202c;">Reverse DNS Zones</h3>
+            <button class="btn btn-primary" onclick="showCreateZoneModal()">
+              <svg data-lucide="plus" style="width: 16px; height: 16px;"></svg>
+              Add Zone
+            </button>
+          </div>
+          
+          <div id="reverse-zones-loading" class="loading" style="display: none;">Loading zones...</div>
+          <div id="reverse-zones-empty" class="empty-state" style="display: none;">
+            <svg data-lucide="inbox"></svg>
+            <p>No reverse DNS zones found</p>
+          </div>
+          
+          <table id="reverse-zones-table" style="display: none;">
+            <thead>
+              <tr>
+                <th>Zone Name</th>
+                <th>Type</th>
+                <th>Serial</th>
+                <th>Records</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reverse-zones-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      </div>
+
+      <!-- Zone Details View (shown when viewing zone) -->
+      <div id="zone-details-view" style="display: none;">
+        <div class="back-button" onclick="viewZonesList()" style="margin-bottom: 24px;">
+          <svg data-lucide="arrow-left" style="width: 16px; height: 16px;"></svg>
+          Back to Zones
+        </div>
+        
+        <div class="zone-details">
+          <h2 id="zone-name-title">Zone Name</h2>
+          
+          <div class="zone-info">
+            <div class="info-item">
+              <label>Zone Name</label>
+              <div id="zone-info-name" class="info-item-value">-</div>
+            </div>
+            <div class="info-item">
+              <label>Zone Type</label>
+              <div id="zone-info-type" class="info-item-value">-</div>
+            </div>
+            <div class="info-item">
+              <label>Serial</label>
+              <div id="zone-info-serial" class="info-item-value">-</div>
+            </div>
+            <div class="info-item">
+              <label>DNSSEC Enabled</label>
+              <div id="zone-info-dnssec" class="info-item-value">-</div>
+            </div>
+          </div>
+
+          <div class="records-header">
+            <h3>DNS Records</h3>
+            <button class="btn btn-primary" onclick="showAddRecordModal()">
+              <svg data-lucide="plus" style="width: 16px; height: 16px;"></svg>
+              Add Record
+            </button>
+          </div>
+
+          <div id="zone-records-loading" class="loading">Loading records...</div>
+          <div id="zone-records-empty" class="empty-state" style="display: none;">
+            <svg data-lucide="inbox"></svg>
+            <p>No records found</p>
+          </div>
+
+          <table id="zone-records-table" style="display: none;">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>TTL</th>
+                <th>Content</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="zone-records-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add Record Modal -->
+<div id="addRecordModal" class="modal">
+  <div style="background: white; border-radius: 12px; padding: 32px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease-out;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+      <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0;">Add New Record</h2>
+      <button style="background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.2s;" onclick="closeAddRecordModal()">&times;</button>
+    </div>
+    
+    <form id="addRecordForm" onsubmit="submitAddRecord(event)">
+      <div id="zoneNameHint" style="margin-bottom: 16px; padding: 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; font-size: 13px; color: #1e40af;"></div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Name *</label>
+        <input type="text" id="recordName" required placeholder="e.g., www, mail, @" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Type *</label>
+        <select id="recordType" required style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+          <option value="">Select type</option>
+          <option value="A">A</option>
+          <option value="AAAA">AAAA</option>
+          <option value="CNAME">CNAME</option>
+          <option value="MX">MX</option>
+          <option value="NS">NS</option>
+          <option value="PTR">PTR</option>
+          <option value="SOA">SOA</option>
+          <option value="SRV">SRV</option>
+          <option value="TXT">TXT</option>
+        </select>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">TTL (Time To Live) *</label>
+        <input type="number" id="recordTTL" value="3600" required style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Content *</label>
+        <textarea id="recordContent" required placeholder="e.g., 192.168.1.1 for A record" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: monospace; min-height: 80px; resize: vertical;"></textarea>
+      </div>
+      
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" onclick="closeAddRecordModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Record</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- View Record Modal -->
+<div id="viewRecordModal" class="modal">
+  <div style="background: white; border-radius: 12px; padding: 32px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease-out;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+      <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0;">Record Details</h2>
+      <button style="background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.2s;" onclick="closeViewRecordModal()">&times;</button>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Name</label>
+      <div id="viewRecordName" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; background: #f7fafc; color: #2d3748;"></div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Type</label>
+      <div id="viewRecordType" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; background: #f7fafc; color: #2d3748;"></div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">TTL (Time To Live)</label>
+      <div id="viewRecordTTL" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; background: #f7fafc; color: #2d3748;"></div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Content</label>
+      <div id="viewRecordContent" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; background: #f7fafc; color: #2d3748; font-family: monospace; word-break: break-all; min-height: 80px; overflow-y: auto;"></div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+      <button type="button" class="btn btn-secondary" onclick="closeViewRecordModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Record Modal -->
+<div id="editRecordModal" class="modal">
+  <div style="background: white; border-radius: 12px; padding: 32px; max-width: 600px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease-out;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+      <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0;">Edit Record</h2>
+      <button style="background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.2s;" onclick="closeEditRecordModal()">&times;</button>
+    </div>
+    
+    <form id="editRecordForm" onsubmit="submitEditRecord(event)">
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Name</label>
+        <input type="text" id="editRecordName" disabled style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; background: #f7fafc;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Record Type</label>
+        <input type="text" id="editRecordType" disabled style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; background: #f7fafc;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">TTL (Time To Live) *</label>
+        <input type="number" id="editRecordTTL" required style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Content *</label>
+        <textarea id="editRecordContent" required style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: monospace; min-height: 80px; resize: vertical;"></textarea>
+      </div>
+      
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" onclick="closeEditRecordModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Record</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Create Zone Modal -->
+<div id="createZoneModal" class="modal">
+  <div style="background: white; border-radius: 12px; padding: 32px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease-out;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+      <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0;">Create New Zone</h2>
+      <button style="background: none; border: none; font-size: 28px; color: #a0aec0; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.2s;" onclick="closeCreateZoneModal()">&times;</button>
+    </div>
+    
+    <form id="createZoneForm" onsubmit="submitCreateZone(event)">
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Zone Name</label>
+        <input type="text" id="zoneName" name="zoneName" required placeholder="example.com" pattern="^[a-zA-Z0-9.-]+$" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Zone Type</label>
+        <select id="zoneType" name="zoneType" required style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+          <option value="">Select zone type</option>
+          <option value="Zone">Native Zone</option>
+          <option value="Master">Master Zone</option>
+          <option value="Slave">Slave Zone</option>
+        </select>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 600; color: #4b5563; margin-bottom: 8px;">Nameservers (optional)</label>
+        <input type="text" id="zoneNameservers" name="zoneNameservers" placeholder="ns1.example.com, ns2.example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-family: inherit; transition: border-color 0.2s;">
+      </div>
+      
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+        <button type="button" class="btn btn-secondary" onclick="closeCreateZoneModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Zone</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Global app state
+  let appState = {
+    zones: [],
+    currentZoneId: null,
+    loading: false,
+    error: null,
+    editingRecord: null
+  };
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    loadZones();
+
+    // Parse URL query params
+    const params = new URLSearchParams(window.location.search);
+    const zoneId = params.get('zone');
+    if (zoneId) {
+      viewZoneDetails(zoneId);
+    }
+  });
+
+  // Load zones from API
+  async function loadZones() {
+    appState.loading = true;
+    hideError();
+    document.getElementById('forward-zones-loading').style.display = 'block';
+    document.getElementById('reverse-zones-loading').style.display = 'block';
+    document.getElementById('forward-zones-empty').style.display = 'none';
+    document.getElementById('reverse-zones-empty').style.display = 'none';
+    document.getElementById('forward-zones-table').style.display = 'none';
+    document.getElementById('reverse-zones-table').style.display = 'none';
+    
+    try {
+      const response = await fetch('/api/servers/localhost/zones');
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      let zones = await response.json();
+      
+      // Fetch individual zone details to get record counts
+      const zoneDetailsPromises = zones.map(z => 
+        fetch(`/api/servers/localhost/zones/${z.id}`)
+          .then(r => r.json())
+          .then(detail => ({
+            ...z,
+            rrsets: detail.rrsets || []
+          }))
+          .catch(e => {
+            console.error(`Error fetching zone ${z.id}:`, e);
+            return { ...z, rrsets: [] };
+          })
+      );
+      
+      zones = await Promise.all(zoneDetailsPromises);
+      appState.zones = zones;
+      
+      renderZones(zones);
+      updateStats(zones);
+      
+    } catch (error) {
+      console.error('Error loading zones:', error);
+      showError(error.message);
+      document.getElementById('forward-zones-loading').style.display = 'none';
+      document.getElementById('reverse-zones-loading').style.display = 'none';
+      document.getElementById('forward-zones-empty').style.display = 'block';
+    } finally {
+      appState.loading = false;
+    }
+  }
+
+  function renderZones(zones) {
+    // Separate forward and reverse zones
+    const forwardZones = zones.filter(z => !z.name.includes('arpa'));
+    const reverseZones = zones.filter(z => z.name.includes('arpa'));
+    
+    // Hide loading
+    document.getElementById('forward-zones-loading').style.display = 'none';
+    document.getElementById('reverse-zones-loading').style.display = 'none';
+    
+    // Render forward zones
+    renderZoneTable(forwardZones, 'forward');
+    
+    // Render reverse zones
+    renderZoneTable(reverseZones, 'reverse');
+  }
+
+  function renderZoneTable(zones, type) {
+    const suffix = type === 'forward' ? 'forward' : 'reverse';
+    const tbody = document.getElementById(`${suffix}-zones-tbody`);
+    const emptyEl = document.getElementById(`${suffix}-zones-empty`);
+    const tableEl = document.getElementById(`${suffix}-zones-table`);
+    
+    tbody.innerHTML = '';
+    
+    if (zones.length === 0) {
+      emptyEl.style.display = 'block';
+      tableEl.style.display = 'none';
+      return;
+    }
+    
+    zones.forEach(zone => {
+      const row = document.createElement('tr');
+      const records = zone.rrsets ? zone.rrsets.length : 0;
+      row.innerHTML = `
+        <td style="font-weight: 600;">${zone.name}</td>
+        <td><span class="record-type-badge">${zone.kind}</span></td>
+        <td>${zone.serial}</td>
+        <td>${records}</td>
+        <td style="text-align: right;">
+          <button class="btn btn-secondary" onclick="viewZoneDetails('${zone.id}')" style="padding: 6px 12px; font-size: 12px; margin-right: 4px;">
+            <svg data-lucide="eye" style="width: 14px; height: 14px; display: inline; margin-right: 4px;"></svg>
+            View
+          </button>
+          <button class="btn btn-secondary" onclick="deleteZone('${zone.id}')" style="padding: 6px 12px; font-size: 12px; color: #dc2626;">
+            <svg data-lucide="trash-2" style="width: 14px; height: 14px; display: inline; margin-right: 4px;"></svg>
+            Delete
+          </button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+    
+    emptyEl.style.display = 'none';
+    tableEl.style.display = 'table';
+    lucide.createIcons();
+  }
+
+  function updateStats(zones) {
+    document.getElementById('stat-zones').textContent = zones.length;
+    
+    const totalRecords = zones.reduce((sum, z) => sum + (z.rrsets?.length || 0), 0);
+    document.getElementById('stat-records').textContent = totalRecords;
+  }
+
+  function showError(message, type = 'error') {
+    const errorBanner = document.getElementById('error-banner');
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = message;
+    
+    if (type === 'success') {
+      errorBanner.style.backgroundColor = '#c6f6d5';
+      errorBanner.style.borderColor = '#9ae6b4';
+      errorMessage.style.color = '#22543d';
+    } else if (type === 'info') {
+      errorBanner.style.backgroundColor = '#bfdbfe';
+      errorBanner.style.borderColor = '#93c5fd';
+      errorMessage.style.color = '#1e40af';
+    } else {
+      errorBanner.style.backgroundColor = '#fed7d7';
+      errorBanner.style.borderColor = '#fc8181';
+      errorMessage.style.color = '#742a2a';
+    }
+    
+    errorBanner.style.display = 'flex';
+    
+    if (type === 'success' || type === 'info') {
+      setTimeout(() => {
+        hideError();
+      }, 3000);
+    }
+  }
+
+  function hideError() {
+    document.getElementById('error-banner').style.display = 'none';
+  }
+
+  async function deleteZone(zoneId) {
+    if (!confirm('Are you sure you want to delete this zone?')) return;
+    
+    try {
+      const response = await fetch(`/api/servers/localhost/zones/${zoneId}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete zone');
+      
+      await loadZones();
+      showError('Zone deleted successfully!', 'success');
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  function viewZonesList() {
+    document.getElementById('zones-list-view').style.display = 'block';
+    document.getElementById('zone-details-view').style.display = 'none';
+  }
+
+  async function viewZoneDetails(zoneId) {
+    console.log('viewZoneDetails called with zoneId:', zoneId);
+    try {
+      const response = await fetch(`/api/servers/localhost/zones/${zoneId}`);
+      if (!response.ok) throw new Error('Failed to load zone details');
+      
+      const zone = await response.json();
+      console.log('Zone data received:', zone);
+      appState.currentZoneId = zoneId;
+      renderZoneDetails(zone);
+      
+      // Hide zones list, show details
+      document.getElementById('zones-list-view').style.display = 'none';
+      document.getElementById('zone-details-view').style.display = 'block';
+      console.log('zone-details-view displayed');
+      
+      lucide.createIcons();
+    } catch (error) {
+      console.error('Error in viewZoneDetails:', error);
+      showError(error.message);
+    }
+  }
+
+  function renderZoneDetails(zone) {
+    console.log('renderZoneDetails called with zone:', zone);
+    
+    // Set zone name title
+    const zoneTitleEl = document.getElementById('zone-name-title');
+    console.log('zone-name-title element:', zoneTitleEl);
+    if (zoneTitleEl) zoneTitleEl.textContent = zone.name;
+    
+    // Set zone info
+    const zoneNameEl = document.getElementById('zone-info-name');
+    console.log('zone-info-name element:', zoneNameEl);
+    if (zoneNameEl) zoneNameEl.textContent = zone.name;
+    
+    const zoneTypeEl = document.getElementById('zone-info-type');
+    if (zoneTypeEl) zoneTypeEl.textContent = zone.kind;
+    
+    const zoneSerialEl = document.getElementById('zone-info-serial');
+    if (zoneSerialEl) zoneSerialEl.textContent = zone.serial;
+    
+    const zoneDnssecEl = document.getElementById('zone-info-dnssec');
+    if (zoneDnssecEl) zoneDnssecEl.textContent = zone.dnssec ? 'Enabled' : 'Disabled';
+    
+    // Render records
+    renderZoneRecords(zone.rrsets || []);
+  }
+
+  function renderZoneRecords(rrsets) {
+    const loadingEl = document.getElementById('zone-records-loading');
+    const emptyEl = document.getElementById('zone-records-empty');
+    const tableEl = document.getElementById('zone-records-table');
+    const tbodyEl = document.getElementById('zone-records-tbody');
+    
+    loadingEl.style.display = 'none';
+    
+    if (rrsets.length === 0) {
+      emptyEl.style.display = 'block';
+      tableEl.style.display = 'none';
+      return;
+    }
+    
+    const records = [];
+    rrsets.forEach(rrset => {
+      if (rrset.records) {
+        rrset.records.forEach(record => {
+          records.push({
+            name: rrset.name,
+            type: rrset.type,
+            ttl: rrset.ttl,
+            content: record.content,
+            disabled: record.disabled
+          });
+        });
+      }
+    });
+    
+    tbodyEl.innerHTML = records.map(record => `
+      <tr>
+        <td><strong>${record.name}</strong></td>
+        <td><span class="record-type-badge">${record.type}</span></td>
+        <td>${record.ttl}</td>
+        <td><code style="background: #f7fafc; padding: 4px 8px; border-radius: 4px; font-size: 12px; word-break: break-all;">${record.content}</code></td>
+        <td style="text-align: right;">
+          <button class="btn btn-secondary" onclick="showViewRecordModal('${record.name.replace(/'/g, "\\'")}', '${record.type}', '${record.ttl}', '${record.content.replace(/'/g, "\\'")}')" style="padding: 6px 12px; font-size: 12px; margin-right: 4px;">
+            <svg data-lucide="eye" style="width: 14px; height: 14px; display: inline; margin-right: 4px;"></svg>
+            View
+          </button>
+          <button class="btn btn-secondary" onclick="showEditRecordModal('${record.name.replace(/'/g, "\\'")}', '${record.type}', '${record.ttl}', '${record.content.replace(/'/g, "\\'")}')" style="padding: 6px 12px; font-size: 12px; margin-right: 4px;">
+            <svg data-lucide="edit" style="width: 14px; height: 14px; display: inline; margin-right: 4px;"></svg>
+            Edit
+          </button>
+          <button class="btn btn-secondary" onclick="deleteRecord('${record.name.replace(/'/g, "\\'")}', '${record.type}')" style="padding: 6px 12px; font-size: 12px; color: #dc2626;">
+            <svg data-lucide="trash-2" style="width: 14px; height: 14px; display: inline; margin-right: 4px;"></svg>
+            Delete
+          </button>
+        </td>
+      </tr>
+    `).join('');
+    
+    tableEl.style.display = 'table';
+    emptyEl.style.display = 'none';
+    lucide.createIcons();
+  }
+
+  function showRecordDetails(name, type, ttl, content) {
+    showError(`Record: ${name} (${type}) TTL: ${ttl} Content: ${content}`, 'info');
+  }
+
+  function showDeleteRecordConfirm(name, type) {
+    if (!confirm(`Are you sure you want to delete ${type} record for ${name}?`)) return;
+    showError(`Delete record functionality coming soon for ${name} (${type})`, 'info');
+  }
+
+  function showCreateZoneModal() {
+    const modal = document.getElementById('createZoneModal');
+    modal.classList.add('show');
+  }
+
+  function closeCreateZoneModal() {
+    const modal = document.getElementById('createZoneModal');
+    modal.classList.remove('show');
+    document.getElementById('createZoneForm').reset();
+  }
+
+  async function submitCreateZone(event) {
+    event.preventDefault();
+    
+    const zoneName = document.getElementById('zoneName').value;
+    const zoneType = document.getElementById('zoneType').value;
+    
+    if (!zoneName || !zoneType) {
+      showError('Please fill in all required fields');
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/servers/localhost/zones', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: zoneName,
+          kind: zoneType,
+          nameservers: document.getElementById('zoneNameservers').value.split(',').map(s => s.trim()).filter(s => s)
+        })
+      });
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || 'Failed to create zone');
+      }
+      
+      closeCreateZoneModal();
+      await loadZones();
+      showError('Zone created successfully!', 'success');
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  // Close modal when clicking outside
+  window.addEventListener('click', (event) => {
+    const modal = document.getElementById('createZoneModal');
+    if (event.target === modal) {
+      closeCreateZoneModal();
+    }
+  });
+  
+  // Close modal on Escape key
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeCreateZoneModal();
+    }
+  });
+
+  function showAddRecordModal() {
+    const zoneId = appState.currentZoneId;
+    const zones = appState.zones;
+    const zone = zones.find(z => z.id === zoneId);
+    
+    const hintDiv = document.getElementById('zoneNameHint');
+    if (zone) {
+      if (zone.name.includes('in-addr.arpa')) {
+        // Reverse zone (PTR records)
+        hintDiv.innerHTML = `<strong>Reverse Zone (PTR):</strong> Enter only the IP part. For example, in zone <code>${zone.name}</code>, enter <code>1</code> for PTR record of 103.142.214.1`;
+      } else {
+        // Forward zone
+        hintDiv.innerHTML = `<strong>Forward Zone:</strong> Enter subdomain name. For example, in zone <code>${zone.name}</code>, enter <code>www</code> to create <code>www.${zone.name}</code>`;
+      }
+    }
+    
+    document.getElementById('addRecordModal').classList.add('show');
+  }
+
+  function closeAddRecordModal() {
+    document.getElementById('addRecordModal').classList.remove('show');
+    document.getElementById('addRecordForm').reset();
+  }
+
+  async function submitAddRecord(event) {
+    event.preventDefault();
+    
+    const recordName = document.getElementById('recordName').value.trim();
+    const recordType = document.getElementById('recordType').value;
+    const recordTTL = document.getElementById('recordTTL').value;
+    const recordContent = document.getElementById('recordContent').value.trim();
+    const zoneId = appState.currentZoneId;
+    
+    if (!zoneId || !recordName || !recordType || !recordTTL || !recordContent) {
+      showError('Please fill in all required fields');
+      return;
+    }
+    
+    try {
+      // Find the zone to get its name
+      const zones = appState.zones;
+      const zone = zones.find(z => z.id === zoneId);
+      if (!zone) {
+        throw new Error('Zone not found');
+      }
+      
+      // Build full record name (FQDN)
+      let fullName = recordName;
+      if (!recordName.endsWith('.')) {
+        // Check if this is a reverse zone (in-addr.arpa)
+        if (zone.name.includes('in-addr.arpa')) {
+          // For reverse zones, if recordName is an IP address part (like "1"), 
+          // prepend it directly to the zone name
+          // e.g., "1" + "214.142.103.in-addr.arpa." = "1.214.142.103.in-addr.arpa."
+          fullName = recordName + '.' + zone.name;
+        } else {
+          // For forward zones, append zone name normally
+          fullName = recordName + '.' + zone.name;
+        }
+      }
+      
+      const payload = {
+        rrsets: [{
+          name: fullName,
+          type: recordType,
+          ttl: parseInt(recordTTL),
+          changetype: 'REPLACE',
+          records: [{
+            content: recordContent,
+            disabled: false
+          }]
+        }]
+      };
+      
+      const response = await fetch(`/api/servers/localhost/zones/${zoneId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        const responseText = await response.text();
+        try {
+          const error = JSON.parse(responseText);
+          throw new Error(error.error || error.message || `API Error: ${response.status}`);
+        } catch (e) {
+          if (e.message && e.message.includes('API Error')) throw e;
+          throw new Error(`API Error ${response.status}: ${responseText}`);
+        }
+      }
+      
+      closeAddRecordModal();
+      // Reload zone details
+      await viewZoneDetails(zoneId);
+      showError('Record added successfully!', 'success');
+    } catch (error) {
+      console.error('Error adding record:', error);
+      showError(error.message);
+    }
+  }
+
+  function showViewRecordModal(name, type, ttl, content) {
+    document.getElementById('viewRecordName').textContent = name;
+    document.getElementById('viewRecordType').textContent = type;
+    document.getElementById('viewRecordTTL').textContent = ttl;
+    document.getElementById('viewRecordContent').textContent = content;
+    document.getElementById('viewRecordModal').classList.add('show');
+  }
+
+  function closeViewRecordModal() {
+    document.getElementById('viewRecordModal').classList.remove('show');
+  }
+
+  function showEditRecordModal(name, type, ttl, content) {
+    appState.editingRecord = { name, type, ttl, content };
+    document.getElementById('editRecordName').value = name;
+    document.getElementById('editRecordType').value = type;
+    document.getElementById('editRecordTTL').value = ttl;
+    document.getElementById('editRecordContent').value = content;
+    document.getElementById('editRecordModal').classList.add('show');
+  }
+
+  function closeEditRecordModal() {
+    document.getElementById('editRecordModal').classList.remove('show');
+    document.getElementById('editRecordForm').reset();
+    appState.editingRecord = null;
+  }
+
+  async function submitEditRecord(event) {
+    event.preventDefault();
+    
+    if (!appState.editingRecord) return;
+    
+    const newTTL = document.getElementById('editRecordTTL').value;
+    const newContent = document.getElementById('editRecordContent').value.trim();
+    const zoneId = appState.currentZoneId;
+    
+    if (!newTTL || !newContent) {
+      showError('Please fill in all required fields');
+      return;
+    }
+    
+    try {
+      const payload = {
+        rrsets: [{
+          name: appState.editingRecord.name,
+          type: appState.editingRecord.type,
+          ttl: parseInt(newTTL),
+          changetype: 'REPLACE',
+          records: [{
+            content: newContent,
+            disabled: false
+          }]
+        }]
+      };
+      
+      const response = await fetch(`/api/servers/localhost/zones/${zoneId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        const responseText = await response.text();
+        try {
+          const error = JSON.parse(responseText);
+          throw new Error(error.error || error.message || `API Error: ${response.status}`);
+        } catch (e) {
+          if (e.message && e.message.includes('API Error')) throw e;
+          throw new Error(`API Error ${response.status}: ${responseText}`);
+        }
+      }
+      
+      closeEditRecordModal();
+      // Reload zone details
+      await viewZoneDetails(zoneId);
+      showError('Record updated successfully!', 'success');
+    } catch (error) {
+      console.error('Error editing record:', error);
+      showError(error.message);
+    }
+  }
+
+  function editRecord() {
+    alert('Edit Record feature coming soon');
+  }
+
+  async function deleteRecord(recordName, recordType) {
+    if (!confirm(`Are you sure you want to delete the ${recordType} record for ${recordName}?`)) {
+      return;
+    }
+    
+    const zoneId = appState.currentZoneId;
+    
+    try {
+      const payload = {
+        rrsets: [{
+          name: recordName,
+          type: recordType,
+          changetype: 'DELETE'
+        }]
+      };
+      
+      const response = await fetch(`/api/servers/localhost/zones/${zoneId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        const responseText = await response.text();
+        try {
+          const error = JSON.parse(responseText);
+          throw new Error(error.error || error.message || `API Error: ${response.status}`);
+        } catch (e) {
+          if (e.message && e.message.includes('API Error')) throw e;
+          throw new Error(`API Error ${response.status}: ${responseText}`);
+        }
+      }
+      
+      // Reload zone details
+      await viewZoneDetails(zoneId);
+      showError('Record deleted successfully!', 'success');
+    } catch (error) {
+      console.error('Error deleting record:', error);
+      showError(error.message);
+    }
+  }
+</script>
+
+<script>
+  // Render icons when page loads
+  window.addEventListener('load', () => {
+    lucide.createIcons();
+  });
+</script>
+
+</body>
+</html>

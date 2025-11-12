@@ -1,0 +1,224 @@
+/* Custom styles for NDash PowerDNS Dashboard */
+
+/* Performance optimizations */
+* {
+  /* Use GPU acceleration for transforms and opacity */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth transitions - optimized */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Optimize scrolling performance */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Enable hardware acceleration */
+  transform: translateZ(0);
+  /* Optimize painting */
+  contain: layout style paint;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(210 40% 96.1%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(215.4 16.3% 46.9%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(222.2 47.4% 11.2%);
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+  /* Optimize animation performance */
+  will-change: transform;
+}
+
+/* Skeleton loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Optimize animation performance */
+  will-change: opacity;
+}
+
+/* Focus styles */
+*:focus {
+  outline: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid hsl(221.2 83.2% 53.3%);
+  outline-offset: 2px;
+}
+
+/* Table hover effects */
+tbody tr:hover {
+  background-color: hsl(210 40% 96.1% / 0.5);
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+/* Toast notifications (for future use) */
+.toast {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Button loading state */
+.btn-loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Form validation */
+input:invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+  border-color: hsl(0 84.2% 60.2%);
+}
+
+input:valid:not(:placeholder-shown),
+select:valid:not(:placeholder-shown),
+textarea:valid:not(:placeholder-shown) {
+  border-color: hsl(142.1 76.2% 36.3%);
+}
+
+/* Skeleton loading */
+.skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: linear-gradient(
+    90deg,
+    hsl(210 40% 96.1%) 25%,
+    hsl(210 40% 98%) 50%,
+    hsl(210 40% 96.1%) 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+}
+
+/* Code/monospace text */
+code, pre {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+}
+
+/* Status indicators */
+.status-online {
+  color: hsl(142.1 76.2% 36.3%);
+}
+
+.status-offline {
+  color: hsl(0 84.2% 60.2%);
+}
+
+.status-warning {
+  color: hsl(47.9 95.8% 53.1%);
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.875rem;
+  }
+  
+  th, td {
+    padding: 0.5rem !important;
+  }
+}

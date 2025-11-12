@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .main-container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      background: #f7fafc;
+    }
+
+    .content-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      background: white;
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    header svg {
+      width: 32px;
+      height: 32px;
+      color: #667eea;
+    }
+
+    .settings-section {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .setting-group {
+      margin-bottom: 24px;
+    }
+
+    .setting-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .setting-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4b5563;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .setting-label .required {
+      color: #dc2626;
+    }
+
+    .setting-description {
+      font-size: 12px;
+      color: #a0aec0;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="email"]:focus,
+    input[type="url"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: monospace;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a67d8;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #2d3748;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .btn-danger {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    .btn-danger:hover {
+      background: #fc8181;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .info-box {
+      background: #bfdbfe;
+      border: 1px solid #93c5fd;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #1e40af;
+    }
+
+    .info-box svg {
+      width: 16px;
+      height: 16px;
+      display: inline;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .warning-box {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #92400e;
+    }
+
+    .warning-box svg {
+      width: 16px;
+      height: 16px;
+      display: inline;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .success-banner {
+      background: #c6f6d5;
+      border: 1px solid #9ae6b4;
+      color: #22543d;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-banner.show {
+      display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .error-banner {
+      background: #fed7d7;
+      border: 1px solid #fc8181;
+      color: #c53030;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-banner.show {
+      display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .server-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      background: #f7fafc;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info-card-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #718096;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .info-card-value {
+      font-size: 14px;
+      color: #2d3748;
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.online {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+
+    .status-badge.offline {
+      background: #fed7d7;
+      color: #742a2a;
+    }
+
+    [data-lucide] {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <%- include('partials/sidebar') %>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="content-wrapper">
+        <!-- Header -->
+        <header>
+          <svg data-lucide="settings"></svg>
+          <h1>Settings</h1>
+        </header>
+
+        <!-- Success Banner -->
+        <div id="success-banner" class="success-banner">
+          <svg data-lucide="check-circle"></svg>
+          <span id="success-message"></span>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="error-banner" class="error-banner">
+          <svg data-lucide="alert-circle"></svg>
+          <span id="error-message"></span>
+        </div>
+
+        <!-- Server Information Section -->
+        <div class="settings-section">
+          <h2 class="section-title">Server Information</h2>
+          
+          <div id="server-info-loading" style="text-align: center; padding: 20px;">
+            <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #e2e8f0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <p style="margin-top: 12px; color: #718096;">Loading server information...</p>
+          </div>
+
+          <div id="server-info" style="display: none;">
+            <div class="server-info" id="server-info-cards"></div>
+          </div>
+        </div>
+
+        <!-- PowerDNS Configuration Section -->
+        <div class="settings-section">
+          <h2 class="section-title">PowerDNS Configuration</h2>
+          
+          <div class="info-box">
+            <svg data-lucide="info"></svg>
+            These settings are read-only and reflect your current PowerDNS API configuration.
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">API Server URL</label>
+            <div class="setting-description">PowerDNS API endpoint</div>
+            <input type="text" id="pdns-url" readonly style="background: #f7fafc; cursor: not-allowed;">
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">API Key</label>
+            <div class="setting-description">PowerDNS API authentication key (masked for security)</div>
+            <input type="text" id="pdns-key" readonly style="background: #f7fafc; cursor: not-allowed;" placeholder="••••••••••••••••">
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Server ID</label>
+            <div class="setting-description">PowerDNS server identifier</div>
+            <input type="text" id="server-id" readonly style="background: #f7fafc; cursor: not-allowed;">
+          </div>
+        </div>
+
+        <!-- Application Settings Section -->
+        <div class="settings-section">
+          <h2 class="section-title">Application Settings</h2>
+          
+          <div class="setting-group">
+            <label class="setting-label">Auto-Refresh Interval (seconds)</label>
+            <div class="setting-description">How often to automatically refresh data on pages</div>
+            <input type="number" id="auto-refresh" value="30" min="5" max="300" step="5">
+            <div class="setting-description" style="margin-top: 8px; font-size: 11px;">
+              ℹ Minimum: 5 seconds | Maximum: 300 seconds
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <input type="checkbox" id="dark-mode" style="width: auto; margin-right: 8px; cursor: pointer;">
+              Dark Mode
+            </label>
+            <div class="setting-description">Enable dark theme for the dashboard</div>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <input type="checkbox" id="notifications" checked style="width: auto; margin-right: 8px; cursor: pointer;">
+              Enable Notifications
+            </label>
+            <div class="setting-description">Show notifications for important events</div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveApplicationSettings()">
+              <svg data-lucide="save" style="width: 16px; height: 16px;"></svg>
+              Save Settings
+            </button>
+            <button class="btn btn-secondary" onclick="resetApplicationSettings()">
+              <svg data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></svg>
+              Reset to Defaults
+            </button>
+          </div>
+        </div>
+
+        <!-- Backup & Maintenance Section -->
+        <div class="settings-section">
+          <h2 class="section-title">Maintenance</h2>
+
+          <div class="warning-box">
+            <svg data-lucide="alert-triangle"></svg>
+            These are system maintenance operations. Use with caution.
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Clear Cache</label>
+            <div class="setting-description">Clear all cached data and reset the dashboard</div>
+            <button class="btn btn-secondary" onclick="clearCache()">
+              <svg data-lucide="trash-2" style="width: 16px; height: 16px;"></svg>
+              Clear Cache
+            </button>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Application Version</label>
+            <div class="setting-description">Current version and build information</div>
+            <input type="text" id="app-version" readonly style="background: #f7fafc; cursor: not-allowed;" value="NDash v1.0.0">
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="settings-section">
+          <h2 class="section-title">About</h2>
+
+          <div class="info-box">
+            <svg data-lucide="info"></svg>
+            <strong>NDash</strong> is a modern PowerDNS management dashboard built with Node.js and Express.
+          </div>
+
+          <div style="color: #718096; font-size: 13px; line-height: 1.6;">
+            <p>
+              <strong>Features:</strong>
+              <br>• DNS Zone Management (Create, Edit, Delete)
+              <br>• DNS Record Management (A, AAAA, CNAME, MX, NS, PTR, SRV, TXT)
+              <br>• Real-time Statistics & Monitoring
+              <br>• PowerDNS API Integration
+              <br>• Responsive Web Interface
+            </p>
+
+            <p style="margin-top: 16px;">
+              <strong>Environment:</strong>
+              <br>• Node.js with Express.js
+              <br>• EJS Templating
+              <br>• Lucide Icons
+              <br>• Modern CSS Styling
+            </p>
+
+            <p style="margin-top: 16px;">
+              <strong>Documentation:</strong>
+              <br>• <a href="https://github.com" style="color: #667eea; text-decoration: none;">GitHub Repository</a>
+              <br>• <a href="https://powerdns.com" style="color: #667eea; text-decoration: none;">PowerDNS Official Site</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    const appState = {
+      autoRefresh: 30,
+      darkMode: false,
+      notifications: true
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadServerInfo();
+      loadApplicationSettings();
+      lucide.createIcons();
+    });
+
+    async function loadServerInfo() {
+      try {
+        const response = await fetch('/api/servers');
+        if (!response.ok) throw new Error('Failed to load server info');
+
+        const servers = await response.json();
+        const server = servers.find(s => s.id === 'localhost') || servers[0];
+
+        document.getElementById('server-info-loading').style.display = 'none';
+        document.getElementById('server-info').style.display = 'block';
+
+        const cardsHtml = `
+          <div class="info-card">
+            <div class="info-card-label">Server Name</div>
+            <div class="info-card-value">${server.name || 'localhost'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">Server ID</div>
+            <div class="info-card-value">${server.id || 'N/A'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">Server Type</div>
+            <div class="info-card-value">${server.type || 'Native'}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">Status</div>
+            <div class="info-card-value">
+              <span class="status-badge online">
+                <svg data-lucide="check-circle" style="width: 12px; height: 12px; display: inline; margin-right: 4px;"></svg>
+                Online
+              </span>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('server-info-cards').innerHTML = cardsHtml;
+        document.getElementById('server-id').value = server.id || 'localhost';
+
+      } catch (error) {
+        console.error('Error loading server info:', error);
+        showError('Failed to load server information');
+      }
+    }
+
+    function loadApplicationSettings() {
+      // Load from localStorage
+      const savedSettings = localStorage.getItem('ndash-settings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        appState.autoRefresh = settings.autoRefresh || 30;
+        appState.darkMode = settings.darkMode || false;
+        appState.notifications = settings.notifications !== false;
+      }
+
+      // Update UI
+      document.getElementById('auto-refresh').value = appState.autoRefresh;
+      document.getElementById('dark-mode').checked = appState.darkMode;
+      document.getElementById('notifications').checked = appState.notifications;
+
+      // Load environment settings
+      document.getElementById('pdns-url').value = 'PDNS_API_URL (from environment)';
+      document.getElementById('pdns-key').value = '••••••••••••••••';
+    }
+
+    function saveApplicationSettings() {
+      appState.autoRefresh = parseInt(document.getElementById('auto-refresh').value);
+      appState.darkMode = document.getElementById('dark-mode').checked;
+      appState.notifications = document.getElementById('notifications').checked;
+
+      // Save to localStorage
+      localStorage.setItem('ndash-settings', JSON.stringify(appState));
+
+      showSuccess('Settings saved successfully!');
+    }
+
+    function resetApplicationSettings() {
+      if (!confirm('Reset all settings to defaults? This cannot be undone.')) {
+        return;
+      }
+
+      appState.autoRefresh = 30;
+      appState.darkMode = false;
+      appState.notifications = true;
+
+      localStorage.removeItem('ndash-settings');
+      loadApplicationSettings();
+
+      showSuccess('Settings reset to defaults');
+    }
+
+    function clearCache() {
+      if (!confirm('Clear all cached data? This will refresh all page data.')) {
+        return;
+      }
+
+      // Clear localStorage cache
+      localStorage.removeItem('ndash-zones');
+      localStorage.removeItem('ndash-settings');
+
+      showSuccess('Cache cleared! Please refresh the page.');
+    }
+
+    function showSuccess(message) {
+      const banner = document.getElementById('success-banner');
+      const messageEl = document.getElementById('success-message');
+      messageEl.textContent = message;
+      banner.classList.add('show');
+
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3000);
+    }
+
+    function showError(message) {
+      const banner = document.getElementById('error-banner');
+      const messageEl = document.getElementById('error-message');
+      messageEl.textContent = message;
+      banner.classList.add('show');
+
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+
+  <script>
+    // Render icons when page loads
+    window.addEventListener('load', () => {
+      try {
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        }
+      } catch (e) {
+        console.error('Error creating lucide icons:', e);
+      }
+    });
+  </script>
+</body>
+</html>

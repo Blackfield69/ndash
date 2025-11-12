@@ -1,0 +1,41 @@
+   _   _  ____             _     
+  | \ | ||  _ \  __ _ ___| |__  
+  |  \| || | | |/ _` / __| '_ \ 
+  | |\  || |_| | (_| \__ \ | | |
+  |_| \_||____/ \__,_|___/_| |_|
+                                
+  PowerDNS Admin Dashboard
+  Version 1.0.0
+  
+  ================================
+  
+  Welcome to NDash!
+  
+  A modern, beautiful dashboard for PowerDNS management
+  built with Express.js, EJS, Alpine.js, and Shadcn UI.
+  
+  Quick Start:
+  
+  1. Configure your PowerDNS API:
+     $ nano .env
+  
+  2. Start the dashboard:
+     $ npm run dev
+  
+  3. Open your browser:
+     http://localhost:3000
+  
+  Documentation:
+  - README.md - Complete guide
+  - QUICKSTART.md - Quick setup
+  - PROJECT_SUMMARY.md - Full overview
+  
+  For help and support:
+  - Check the documentation
+  - Review the logs
+  - Visit the GitHub repository
+  
+  ================================
+  
+  Built with ❤️ for the PowerDNS community
+  
