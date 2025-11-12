@@ -24,16 +24,32 @@ Click the "Add Zone" button on the DNS Zones page.
 - **Zone Type**: Select appropriate type (Master, Native, Slave)
 - **Nameservers**: (Optional) Add nameservers
 
-#### Step 3: Enable Auto-Generation
+#### Step 3: Enable Auto-Generation and Set Domain
 When you enter a reverse zone name (containing "in-addr.arpa"), a blue section appears:
 - **Auto-generate PTR records (1-254)**: Check this box to enable auto-generation
-- This creates PTR records for all IPs from .1 to .254
+- **Base Domain for PTR Records**: Enter the domain to use for generated records (e.g., `example.com`)
+  - This creates records like: `host1.example.com`, `host2.example.com`, ... `host254.example.com`
 
 #### Step 4: Create Zone
 Click "Create Zone" and the system will:
 1. Create the reverse zone
-2. Generate 254 PTR records (if checkbox was enabled)
+2. Generate 254 PTR records with hostnames from your specified domain (if checkbox was enabled)
 3. Show success notification
+
+## Configuration Options
+
+### Base Domain Field
+The domain field allows you to customize the hostname part of the PTR records:
+
+**Example configurations:**
+- **Domain**: `example.com` → Records: `host1.example.com.`, `host2.example.com.`, etc.
+- **Domain**: `servers.myorg.net` → Records: `host1.servers.myorg.net.`, `host2.servers.myorg.net.`, etc.
+- **Domain**: `clients.local` → Records: `host1.clients.local.`, `host2.clients.local.`, etc.
+
+### Visibility Rules
+- The auto-generate section only appears when you enter a reverse zone name
+- The domain field only appears when the auto-generate checkbox is checked
+- The domain field is required when auto-generate is enabled
 
 ## Technical Implementation
 
@@ -47,7 +63,7 @@ For each IP (1-254):
 - **Record Name**: `{octet}.{zoneName}` (e.g., `1.214.142.103.in-addr.arpa.`)
 - **Record Type**: PTR
 - **TTL**: 3600 seconds
-- **Content**: Placeholder hostname (e.g., `host1.example.com.`)
+- **Content**: User-specified domain hostname (e.g., `host1.example.com.`)
 
 ### Batch Processing
 - Records are created in batches of 10
@@ -85,17 +101,32 @@ Creates records for all /16 network addresses:
 <!-- Auto-generate IPs for Reverse Zone -->
 <div id="autoGenerateIPContainer" style="...">
   <label>
-    <input type="checkbox" id="autoGenerateIPs">
+    <input type="checkbox" id="autoGenerateIPs" onchange="toggleDomainField()">
     <span>Auto-generate PTR records (1-254)</span>
   </label>
+
+  <!-- Domain field for PTR records -->
+  <div id="ptrDomainField" style="display: none;">
+    <label>Base Domain for PTR Records</label>
+    <input type="text" id="ptrBaseDomain" placeholder="example.com">
+    <p>Example: host1.example.com, host2.example.com, ... host254.example.com</p>
+  </div>
+
   <p>Creates PTR records for IPs 1-254 in this reverse zone</p>
 </div>
 ```
 
 **Properties**:
-- Initially **hidden** for non-reverse zones
-- Shows automatically when reverse zone name is entered
-- Styled with blue background to highlight the feature
+- Auto-generate checkbox: Initially **hidden** for non-reverse zones
+- Domain field: Initially **hidden**, shows only when auto-generate checkbox is checked
+- Blue background highlights the feature
+- Domain field is **required** when auto-generate is enabled
+
+**User Interaction Flow**:
+1. User enters reverse zone name → Auto-generate section appears
+2. User checks "Auto-generate" → Domain field appears
+3. User enters base domain → System uses it for PTR records
+4. User submits → Creates zone + generates 254 records with specified domain
 
 ## API Calls
 
@@ -110,6 +141,7 @@ Body: {
 ```
 
 ### 2. Generate Records (Batches)
+For each IP 1-254 using the user-specified base domain:
 ```
 PATCH /api/servers/localhost/zones/{zoneId}
 Body: {
@@ -132,6 +164,10 @@ Body: {
   ]
 }
 ```
+
+**Base Domain Substitution Example**:
+- User enters: `servers.myorg.local`
+- Generated records: `host1.servers.myorg.local.`, `host2.servers.myorg.local.`, etc.
 
 ## Performance Considerations
 
